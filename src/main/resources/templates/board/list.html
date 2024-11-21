@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}"
+>
+<style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+<div class="container-fluid" layout:fragment="content">
+    <h1>게시판-리스트</h1>
+    <form>
+        <div class ="col" >
+            <input type="hidden" name="pageSize" th:value="${responseDTO.pageSize}">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <select class="form-select" name="sortField">
+                        <option value=""></option>
+                        <option value="t" th:selected="${requestDTO.sortField == 't'}">제목</option>
+                        <option value="c" th:selected="${requestDTO.sortField == 'c'}">내용</option>
+                        <option value="m" th:selected="${requestDTO.sortField == 'm'}">작성자</option>
+                    </select>
+                </div>
+                <div class="input-group-prepend">
+                    <select class="form-select" name="sortDirection">
+                        <option value=""></option>
+                        <option value="d" th:selected="${requestDTO.sortDirection == 'd'}">내림차순</option>
+                        <option value="a" th:selected="${requestDTO.sortDirection == 'a'}">오름차순</option>
+                    </select>
+                </div>
+                <div class="input-group-prepend">
+                    <select class="form-select" name="searchField">
+                        <option value=""></option>
+                        <option value="t" th:selected="${requestDTO.searchField == 't'}">제목</option>
+                        <option value="c" th:selected="${requestDTO.searchField == 'c'}">내용</option>
+                        <option value="m" th:selected="${requestDTO.searchField == 'm'}">작성자</option>
+                    </select>
+                </div>
+                <input type="text" class="form-control" name="searchValue" th:value="${requestDTO.searchValue}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary searchBtn" type="submit">검색</button>
+                    <button class="btn btn-outline-secondary clearBtn" type="reset">취소</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" th:text="인덱스"></th>
+                <th scope="col" th:text="제목"></th>
+                <th scope="col" th:text="작성자"></th>
+                <th scope="col" th:text="등록일"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="dto,status:${responseDTO.dtoList}">
+                <td scope="row" th:text="${dto.idx}"></td>
+                <td scope="row"><a th:href="@{/board/view(idx=${dto.idx}, queryString=${responseDTO.queryString})}" th:text="${dto.title}"></a></td>
+                <td scope="row" th:text="${dto.memberId}"></td>
+                <td scope="row" th:text="${dto.displayDate}"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <button id="btnRegist" th:text="등록" th:onclick="regist()"></button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <nav aria-label="Page navigation example">
+        <hr class="my-0" />
+        <ul class="pagination justify-content-center my-4">
+            <li class="page-item"><a th:if="${responseDTO.hasPrev}" class="page-link" th:href="@{/board/list(pageNo=${responseDTO.blockStart - 1},pageSize=${responseDTO.pageSize},searchField=${requestDTO.searchField},searchValue=${requestDTO.searchValue},sortField=${requestDTO.sortField},sortDirection=${requestDTO.sortDirection})}" th:text="이전페이지" tabindex="-1" aria-disabled="true"></a></li>
+            <li th:classappend="${responseDTO.pageNo == pageNo} ? 'page-item active' : 'page-item'" aria-current="page"><a class="page-link" th:each="pageNo : ${#numbers.sequence(responseDTO.blockStart,responseDTO.blockEnd)}" th:href="@{/board/list(pageNo=${pageNo},pageSize=${responseDTO.pageSize},searchField=${requestDTO.searchField},searchValue=${requestDTO.searchValue},sortField=${requestDTO.sortField},sortDirection=${requestDTO.sortDirection})}" th:text="${pageNo}"></a></li>
+            <li class="page-item"><a th:if="${responseDTO.hasNext}" class="page-link" th:href="@{/board/list(pageNo=${responseDTO.blockEnd + 1},pageSize=${responseDTO.pageSize},searchField=${requestDTO.searchField},searchValue=${requestDTO.searchValue},sortField=${requestDTO.sortField},sortDirection=${requestDTO.sortDirection})}" th:text="다음페이지" tabindex="-1" aria-disabled="true"></a></li>
+        </ul>
+    </nav>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        const queryString = [[${responseDTO.queryString}]]
+        function regist(){
+            location.href='/board/regist?queryString='+queryString;
+        }
+    </script>
+</th:block>

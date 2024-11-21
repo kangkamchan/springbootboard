@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 th:text="${msg}"/>
+    <h2 th:text="${arr}" />
+    <ul>
+        <li><b>변수의 선언</b>
+            <ul th:with="num1=${10},num2=${20}">
+                <li th:text="${num1}"></li>
+                <li th:text="${num2}"></li>
+            </ul>
+        </li>
+        <li><b>제어문 : if</b>
+            <ul th:with="num1=${10},num2=${20}">
+                <li th:if="${num1 > num2}" th:text="${num1}+' > ' + ${num2} + ' = ' + ${num1>num2}">xxxxx</li>
+                <li th:if="${num1 < num2}" th:text="${num1}+' < ' + ${num2} + ' = ' + ${num1<num2}">xxxxx</li>
+                <li th:unless="${num1 > num2}" th:text="${num1}+' < ' + ${num2} + ' = ' + ${num1<num2}">xxxxx</li>
+                <li th:text="${num2}"></li>
+            </ul>
+        </li>
+        <li><b>제어문 : 삼항연산자 ?</b>
+            <ul th:with="num1=${10},num2=${20}">
+                <li th:text="${num1>num2} ? ${num1}+'num1' : 'num2='+${num2}">xxxxx</li>
+                <li th:text="${num1>num2} ? ${num1} : ${num2}">xxxxx</li>
+            </ul>
+        </li>
+        <li><b>반복문 : each</b>
+            <br> th:each ="str, status : ${list}"
+            <ul>
+                <li th:each="s, status:${list}" th:text="'list['+${status.index} + '] : ' + ${s}"></li>
+            </ul>
+        </li>
+        <li><b>반복문 : each + block</b>
+            <ul>
+                <li th:each="s,status:${list}">
+                    <th:block>
+                        <span th:if="${status.odd}">STATUS.ODD:[[${s}]]</span>
+                        <span th:if="${status.even}">STATUS.EVEN:[[${s}]]</span>
+                    </th:block>
+                </li>
+            </ul>
+        </li>
+        <li><b>th:switch~th:case</b>
+            <br>th:block 로 묶어서 처리
+            <ul>
+                <li th:each="s,status:${list}">
+                    <th:block th:switch="${status.index%3}">
+                        <span th:case="0">0</span>
+                        <span th:case="1">1</span>
+                        <span th:case="2">2</span>
+                    </th:block>
+                </li>
+
+            </ul>
+        </li>
+        <li><b>링크</b>
+            <br>< a href="@{/hello/hello}" >링크로이동< /a >
+            <br>< a href="@{/hello/hello(name='AA', age=16}" >링크로이동< /a >
+        </li>
+        <li>
+            <ul>
+                <li><a th:href="@{/hello/hello}">hello</a></li>
+                <li><a th:href="@{/ex1/ex1(msg='메시지링크',age=14)}">ex1</a></li>
+            </ul>
+        </li>
+        <li><b>인라인처리</b>
+            <br><script th:inline="javascript">
+            const list = [[${list}]];
+            document.write(list);
+            console.log(JSON.stringify(list));
+            </script>
+        </li>
+    </ul>
+    <ul>
+        <li>[[${list}]]</li>
+    </ul>
+    <뿡 th:each="item : ${list}">[[${item}]]</뿡>
+
+
+    <pre>
+                 .88888888:.
+                88888888.88888.
+              .8888888888888888.
+              888888888888888888
+              88' _`88'_  `88888
+              88 88 88 88  88888
+              88_88_::_88_:88888
+              88:::,::,:::::8888
+              88`:::::::::'`8888
+             .88  `::::'    8:88.
+            8888            `8:888.
+          .8888'             `888888.
+         .8888:..  .::.  ...:'8888888:.
+        .8888.'     :'     `'::`88:88888
+       .8888        '         `.888:8888.
+      888:8         .           888:88888
+    .888:88        .:           888:88888:
+    8888888.       ::           88:888888
+    `.::.888.      ::          .88888888
+   .::::::.888.    ::         :::`8888'.:.
+  ::::::::::.888   '         .::::::::::::
+  ::::::::::::.8    '      .:8::::::::::::.
+ .::::::::::::::.        .:888:::::::::::::
+ :::::::::::::::88:.__..:88888:::::::::::'
+  `'.:::::::::::88888888888.88:::::::::'
+        `':::_:' -- '' -'-' `':_::::'`
+    </pre>
+</body>
+</html>

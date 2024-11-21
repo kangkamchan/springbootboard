@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}"
+>
+<div class="container-fluid" layout:fragment="content">
+    <h1>게시판-조회</h1>
+    <form id="frm" method="post" action="/board/modify">
+        <table class="table">
+            <input type="hidden" name="idx" th:value="${boardDTO.idx}">
+            <input type="hidden" name="memberId" th:value="${boardDTO.memberId}">
+                <tr>
+                    <th th:text="인덱스"></th>
+                    <td th:text="${boardDTO.idx}"></td>
+                </tr>
+                <tr>
+                    <th><label for="title" th:text="제목"></label></th>
+                    <td><input type="text" name="title" id="title" th:value="${boardDTO.title}"></td>
+                </tr>
+                <tr>
+                    <th th:text="등록일"></th>
+                    <td th:text="${boardDTO.displayDate}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea th:text="${boardDTO.content.replace('\r\n','<br>')}" id="content" name="content"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="btnBack" class="btn">취소</button>
+                        <button id="btnSubmit" class="btn">수정</button>
+                        <button id="btnDelete" class="btn" type="reset">리셋</button>
+                    </td>
+                </tr>
+        </table>
+    </form>
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        const frm = document.getElementById("frm");
+        const idx = [${idx}]];
+        const btnBack = document.getElementById("btnBack");
+        btnBack.addEventListener("click",(e)=>{
+            e.preventDefault();
+            e.stopPropagation();
+            location.href="/board/view?idx"+idx;
+        });
+        const btnSubmit = document.getElementById("btnSubmit");
+        btnSubmit.addEventListener("click",(e)=>{
+            e.stopPropagation();
+            e.preventDefault();
+            frm.submit();
+        });
+    </script>
+</th:block>

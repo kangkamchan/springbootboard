@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}"
+>
+<div class="container-fluid" layout:fragment="content">
+    <h1>게시판-조회</h1>
+    <form id="frm" method="post" action="/board/regist">
+        <input type="hidden" name="memberId" th:value="user4">
+        <table class="table">
+                <tr>
+                    <th><label for="title" th:text="제목"></label></th>
+                    <td><input type="text" name="title" id="title"></td>
+                </tr>
+                <tr>
+                    <th th:text="등록일"></th>
+                    <td><input type="date" id="displayDate" name="displayDate"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea id="content" name="content"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="btnBack" class="btn">취소</button>
+                        <button id="btnSubmit" class="btn">등록</button>
+                        <button id="btnDelete" class="btn" type="reset">리셋</button>
+                    </td>
+                </tr>
+        </table>
+    </form>
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        const frm = document.getElementById("frm");
+        const idx = [[${idx}]];
+        const queryString = [[${queryString}]];
+        const btnBack = document.getElementById("btnBack");
+        btnBack.addEventListener("click",(e)=>{
+            e.preventDefault();
+            e.stopPropagation();
+            location.href="/board/list?"+queryString;
+        });
+        const btnSubmit = document.getElementById("btnSubmit");
+        btnSubmit.addEventListener("click",(e)=>{
+            e.stopPropagation();
+            e.preventDefault();
+            frm.submit();
+        });
+    </script>
+</th:block>
